@@ -1,13 +1,14 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import Image from "next/image";
-import { Login } from "@/components/login/Login";
+import { useGameContext } from "@/context/gameContext";
 import { RoundController } from "@/components/round-controller/RoundController";
-import { usePlayerInfoContext } from "@/context/playerContext";
 import { CurrentRound } from "@/components/current-round/CurrentRound";
+import { Login } from "@/components/login/Login";
 import { Ranking } from "@/components/ranking/Ranking";
 import { Chat } from "@/components/chat/Chat";
+
 
 const columns = [
   {
@@ -25,9 +26,10 @@ const columns = [
 ];
 
 export default function Home() {
+  const { playerName, setPlayerName , hasJoined } = useGameContext();
+
   const [points, setPoints] = useState(100);
-  const [multiplier, setMultiplier] = useState(2.15);
-  const { playerInfo, setPlayerInfo } = usePlayerInfoContext();
+  const [multipler, setMultipler] = useState(2.15);
 
   const headerItems = [
     {
@@ -37,7 +39,7 @@ export default function Home() {
     },
     {
       icon: "/images/player-profile.png",
-      text: "Guest",
+      text: playerName || "Guest",
       size: "sm",
     },
     {
@@ -51,27 +53,28 @@ export default function Home() {
     <div className="flex min-h-screen flex-col items-center py-32 px-24 bg-black">
       <div className="w-full max-w-7xl min-h-[480px] flex justify-center flex-wrap gap-16 lg:flex-nowrap">
         <div className="grow w-2/5 max-w-[480px]">
-          {playerInfo.hasJoined ? (
+
+          {hasJoined ? (
             <>
               <div className="flex items-center justify-around">
                 <RoundController
                   label="Points"
                   value={points}
                   onIncrement={() => {
-                    setPoints((previous: number) => previous + 1);
+                    setPoints((previous) => previous + 1);
                   }}
                   onDecrement={() => {
-                    setPoints((previous: number) => previous - 1);
+                    setPoints((previous) => previous - 1);
                   }}
                 />
                 <RoundController
                   label="Multipilier"
-                  value={multiplier}
+                  value={multipler}
                   onIncrement={() => {
-                    setMultiplier((previous: number) => previous + 1);
+                    setMultipler((previous) => previous + 1);
                   }}
                   onDecrement={() => {
-                    setMultiplier((previous: number) => previous - 1);
+                    setMultipler((previous) => previous - 1);
                   }}
                 />
               </div>
@@ -87,9 +90,8 @@ export default function Home() {
             {headerItems.map((item, index: number) => (
               <li
                 key={index}
-                className={`h-full flex flex-1 items-center gap-8 rounded-8 bg-gradient-to-r from-[#181b24] ${
-                  index === 0 ? "to-dark-blue" : "bg-dark-blue"
-                }`}
+                className={`h-full flex flex-1 items-center gap-8 rounded-8 bg-gradient-to-r from-[#181b24] ${index === 0 ? "to-dark-blue" : "bg-dark-blue"
+                  }`}
               >
                 <Image src={item.icon} alt="Logo" width={40} height={40} />
                 <p className={`text-white text-${item.size}`}>{item.text}</p>
@@ -103,8 +105,8 @@ export default function Home() {
 
       <div className="w-full max-w-7xl flex gap-16 flex-wrap mt-24">
         <Ranking />
-        <Chat/>
+        <Chat />
       </div>
-    </div>
+    </div >
   );
 }

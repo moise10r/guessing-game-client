@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "./themeProvider";
 
 import "./globals.css";
-import PlayerProvider from "@/context/playerContext";
+import GameProvider from "@/context/gameContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body className=''>
         <ThemeProvider>
-          <PlayerProvider>
+          <GameProvider>
             {children}
-          </PlayerProvider>
+          </GameProvider>
         </ThemeProvider>
       </body>
     </html>

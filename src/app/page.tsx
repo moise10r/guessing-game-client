@@ -6,6 +6,7 @@ import { Login } from "@/components/login/Login";
 import { RoundController } from "@/components/round-controller/RoundController";
 import { usePlayerInfoContext } from "@/context/playerContext";
 import { CurrentRound } from "@/components/current-round/CurrentRound";
+import { Ranking } from "@/components/ranking/Ranking";
 
 const columns = [
   {
@@ -97,6 +98,10 @@ export default function Home() {
 
           <div className="w-full grow bg-dark-blue border border-[#5a6374] rounded-small"></div>
         </div>
+      </div>
+
+      <div className="w-full max-w-7xl flex gap-16 flex-wrap mt-24">
+        <Ranking />
       </div>
     </div>
   );

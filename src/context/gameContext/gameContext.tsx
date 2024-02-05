@@ -1,14 +1,11 @@
 "use client";
 import React, { createContext, useState, ReactNode } from "react";
 import { NextPage } from "next";
+import { IPlayer } from "@/interfaces/player.interface";
 
-type IPlayer = {
-  name: string;
-  score: number;
-};
 
 interface GameContextProps {
-  playerName: string;
+  name: string;
   hasJoined: boolean;
   freezePoint: number;
   speed: number;
@@ -26,7 +23,7 @@ interface GameContextProps {
 }
 
 const defaultPlayerData: GameContextProps = {
-  playerName: "",
+  name: "",
   hasJoined: false,
   score: 1000,
   freezePoint: 0,
@@ -59,13 +56,13 @@ export const useGameContext = () => {
 const { Provider } = PlayerContext;
 
 const GameProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
-  const [playerName, setPlayerName] = useState<string>(
-    defaultPlayerData.playerName
+  const [name, setPlayerName] = useState<string>(
+    defaultPlayerData.name
   );
   const [hasJoined, setHasJoined] = useState<boolean>(
     defaultPlayerData.hasJoined
   );
-  console.log('playerName',playerName);
+  console.log('name',name);
   
   const [score, setScore] = useState<number>(
     defaultPlayerData.score
@@ -84,7 +81,7 @@ const GameProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
   );
 
   const providerValues: GameContextProps = {
-    playerName,
+    name,
     hasJoined, 
     setHasJoined,
     setPlayerName,

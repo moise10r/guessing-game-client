@@ -1,14 +1,22 @@
 'use client';
 import { Card, CardHeader, CardBody } from "@nextui-org/react";
-import { useGameContext } from "@/context/gameContext";
+import { useGameContext } from "@/context/gameContext/gameContext";
 import { CustomButton } from "../shared";
+import { socket } from "@/services/socket.service";
+import { WebSocketEvents } from "../../enums/socketevent.enum";
+import { useState } from "react";
 
 
 export const Login: React.FC = () => {
-  const { playerName, setPlayerName, setHasJoined } = useGameContext();
-  console.log('playerInfo', playerName);
-  let isDesabled = ((playerName?.length) || 0) < 3;
+  const { setPlayerName, setHasJoined, hasJoined } = useGameContext();
+  const [joiningPlayerName, setJoiningPlayerName] = useState('')
+  let isDesabled = ((joiningPlayerName?.length) || 0) < 3;
 
+  const handleJoinGame = () =>{
+    setHasJoined(true)
+    setPlayerName(joiningPlayerName)
+    socket.emit(WebSocketEvents.PLAYER_JOIN,{joiningPlayerName})
+  }
   return (
     <Card className="flex flex-col w-full h-full bg-dark-blue border border-[#5a6374] rounded-small py-48 px-20">
       <CardHeader className="flex justify-center">
@@ -22,8 +30,8 @@ export const Login: React.FC = () => {
         <div className="mb-8 w-full">
           <input
             type="text"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
+            value={joiningPlayerName}
+            onChange={(e) => setJoiningPlayerName(e.target.value)}
             className="bg-[#000] border border-[#5a6374] rounded-8 w-full h-[48px] px-12 py-8 text-white"
           />
         </div>
@@ -35,7 +43,7 @@ export const Login: React.FC = () => {
           className={`h-[42px] text-white bg-gradient-to-r
            ${isDesabled ? 'from-[#5a6374] to-[#5a6374]' : 'from-[#e53d79] to-[#f75753]'}
             `}
-          handleClick={() => setHasJoined(true)}
+          handleClick={handleJoinGame }
         />
 
       </CardBody>

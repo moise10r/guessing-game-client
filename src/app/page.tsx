@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useGameContext } from "@/context/gameContext";
+import { useGameContext } from "@/context/gameContext/gameContext";
 import { RoundController } from "@/components/round-controller/RoundController";
 import { CurrentRound } from "@/components/current-round/CurrentRound";
 import { Login } from "@/components/login/Login";
@@ -26,7 +26,7 @@ const columns = [
 ];
 
 export default function Home() {
-  const { playerName, setPlayerName , hasJoined } = useGameContext();
+  const { name, setPlayerName , hasJoined } = useGameContext();
 
   const [points, setPoints] = useState(100);
   const [multipler, setMultipler] = useState(2.15);
@@ -39,7 +39,7 @@ export default function Home() {
     },
     {
       icon: "/images/player-profile.png",
-      text: playerName || "Guest",
+      text: name || "",
       size: "sm",
     },
     {
@@ -61,20 +61,21 @@ export default function Home() {
                   label="Points"
                   value={points}
                   onIncrement={() => {
-                    setPoints((previous) => previous + 1);
+                    setPoints((previous) => previous + 25);
                   }}
                   onDecrement={() => {
-                    setPoints((previous) => previous - 1);
+                    setPoints((previous) => previous - 25);
                   }}
                 />
                 <RoundController
                   label="Multipilier"
                   value={multipler}
                   onIncrement={() => {
-                    setMultipler((previous) => previous + 1);
+                    if(multipler<0) return;
+                    setMultipler((previous) => previous + 0.25);
                   }}
                   onDecrement={() => {
-                    setMultipler((previous) => previous - 1);
+                    setMultipler((previous) => previous - 0.25);
                   }}
                 />
               </div>
@@ -99,7 +100,7 @@ export default function Home() {
             ))}
           </ul>
 
-          <div className="w-full grow bg-dark-blue border border-[#5a6374] rounded-small"></div>
+          <div className="w-full grow bg-dark-blue border border-[#5a6374] rounded-small">graph</div>
         </div>
       </div>
 

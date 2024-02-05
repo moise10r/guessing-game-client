@@ -1,8 +1,8 @@
 import React from 'react';
 import { Slider } from "@nextui-org/react";
 
-import { CustomButton } from '..'
 import Image from 'next/image';
+import { CustomButton } from '../shared';
 
 export const CurrentRound = () => {
 

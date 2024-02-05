@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import { CustomButton } from "..";
+import { CustomButton } from "../shared";
 
 export const Chat: React.FC = () => {
 

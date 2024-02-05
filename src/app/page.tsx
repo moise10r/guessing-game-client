@@ -7,6 +7,7 @@ import { RoundController } from "@/components/round-controller/RoundController";
 import { usePlayerInfoContext } from "@/context/playerContext";
 import { CurrentRound } from "@/components/current-round/CurrentRound";
 import { Ranking } from "@/components/ranking/Ranking";
+import { Chat } from "@/components/chat/Chat";
 
 const columns = [
   {
@@ -102,6 +103,7 @@ export default function Home() {
 
       <div className="w-full max-w-7xl flex gap-16 flex-wrap mt-24">
         <Ranking />
+        <Chat/>
       </div>
     </div>
   );

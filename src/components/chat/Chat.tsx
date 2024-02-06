@@ -25,6 +25,7 @@ export const Chat: React.FC = () => {
     setIsComputing,
     joinedPlayers,
     setJoinedPlayers,
+    setFreezePoint
   } = useGameContext();
 
   console.log("joinedPlayers", joinedPlayers);
@@ -38,14 +39,15 @@ export const Chat: React.FC = () => {
       setJoinedPlayers(players);
     });
 
-    socket.on(WebSocketEvents.STARTS_ROUND, (playerName: string) => {
-      console.log("playerName", playerName);
-
-      const data: Omit<PlayerDto, "score"> = {
+    socket.on(WebSocketEvents.STARTS_ROUND, (initiatorPlayer: PlayerDto) => {
+      console.log("playerName", initiatorPlayer); // who initialized the game
+      const data: PlayerDto = {
         name,
         points,
         multiplier,
+        freezePoint: initiatorPlayer.freezePoint
       };
+      setFreezePoint(initiatorPlayer.freezePoint);
       console.log("PlayerDto", data);
       setIsComputing(true);
       socket.emit(WebSocketEvents.ROUND_STARTED, data);
@@ -88,7 +90,7 @@ export const Chat: React.FC = () => {
 
       <div className="flex flex-col justify-end bg-dark-blue pt-24 rounded-6 grow">
         {name ? (
-          <ul className="px-16">
+          <ul className="px-16 max-h-[140px] scroll-auto">
             {chatMessages.map((chat: ChatData, index: number) => (
               <li
                 key={index}

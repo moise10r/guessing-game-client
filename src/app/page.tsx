@@ -8,6 +8,7 @@ import { CurrentRound } from "@/components/current-round/CurrentRound";
 import { Login } from "@/components/login/Login";
 import { Ranking } from "@/components/ranking/Ranking";
 import { Chat } from "@/components/chat/Chat";
+import GraphBoard from "@/components/Graph-board/graphBoard";
 
 const columns = [
   {
@@ -111,8 +112,8 @@ export default function Home() {
             ))}
           </ul>
 
-          <div className="w-full grow bg-dark-blue border border-[#5a6374] rounded-small">
-            graph
+          <div  className="w-full grow bg-dark-blue border border-[#5a6374] rounded-small flex justify-center items-center relative">
+            <GraphBoard/>
           </div>
         </div>
       </div>

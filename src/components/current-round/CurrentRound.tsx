@@ -91,7 +91,9 @@ export const CurrentRound = () => {
         fullWidth
         text={isComputing? 'Started':'Start'}
         handleClick={gameStarted}
-        className="h-[48px] text-22 font-semibold text-white bg-gradient-to-r from-[#e53d79] to-[#f75753]"
+        className={`h-[48px] text-white bg-gradient-to-r
+        ${isComputing ? 'from-[#5a6374] to-[#5a6374] cursor-not-allowed' : 'from-[#e53d79] to-[#f75753]'}
+         `}
       />
 
       <div className="flex items-center gap-8 my-20">

@@ -100,6 +100,8 @@ const GameProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
     setIsComputing(true);
     const freezePoint: number = generateRandomNumber(1, 9, 2);
     setFreezePoint(freezePoint);
+    console.log('freezePoint',freezePoint);
+    
     const data: PlayerDto = {
       name,
       points,
@@ -114,14 +116,15 @@ const GameProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
   useEffect(() => {
     console.log("loaded");
 
-    socket.on(WebSocketEvents.STARTS_ROUND, (playerName: string) => {
-      console.log("playerName", playerName);
-
+    socket.on(WebSocketEvents.STARTS_ROUND, (initiatorPlayer: PlayerDto) => {
+      console.log("playerName", initiatorPlayer); // who initialized the game
       const data: PlayerDto = {
         name,
         points,
         multiplier,
+        freezePoint: initiatorPlayer.freezePoint
       };
+      setFreezePoint(initiatorPlayer.freezePoint);
       console.log("PlayerDto", data);
       setIsComputing(true);
       socket.emit(WebSocketEvents.ROUND_STARTED, data);

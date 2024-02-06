@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import { NextPage } from "next";
 import { IPlayer } from "@/interfaces/player.interface";
-
+import { socket } from "@/services/socket.service";
+import { WebSocketEvents } from "@/enums/socketevent.enum";
+import { PlayerDto } from "@/app/dto/playerRound.dto";
+import { generateRandomNumber } from "../../../utils/randomNumber";
 
 interface GameContextProps {
   name: string;
@@ -12,14 +16,20 @@ interface GameContextProps {
   score: number;
   isComputing: boolean;
   playersRanking: IPlayer[];
-  setPlayerName: React.Dispatch<React.SetStateAction<string>>;
+  joinedPlayers: PlayerDto[];
+  points: number;
+  multiplier: number;
+  setName: React.Dispatch<React.SetStateAction<string>>;
   setSpeed: React.Dispatch<React.SetStateAction<number>>;
   setIsComputing: React.Dispatch<React.SetStateAction<boolean>>;
   setPlayersRanking: React.Dispatch<React.SetStateAction<IPlayer[]>>;
+  setJoinedPlayers: React.Dispatch<React.SetStateAction<PlayerDto[]>>;
   setScore: React.Dispatch<React.SetStateAction<number>>;
   setFreezePoint: React.Dispatch<React.SetStateAction<number>>;
   setHasJoined: React.Dispatch<React.SetStateAction<boolean>>;
-  
+  setPoints: React.Dispatch<React.SetStateAction<number>>;
+  setMultiplier: React.Dispatch<React.SetStateAction<number>>;
+  gameStarted: () => void;
 }
 
 const defaultPlayerData: GameContextProps = {
@@ -29,14 +39,21 @@ const defaultPlayerData: GameContextProps = {
   freezePoint: 0,
   speed: 0,
   isComputing: false,
+  points: 100,
+  multiplier: 2.15,
+  setMultiplier: () => {},
   playersRanking: [],
-  setPlayerName: () => {},
+  joinedPlayers: [],
+  setPoints: () => {},
+  setName: () => {},
   setHasJoined: () => {},
   setSpeed: () => {},
   setScore: () => {},
   setIsComputing: () => {},
   setPlayersRanking: () => {},
+  setJoinedPlayers: () => {},
   setFreezePoint: () => {},
+  gameStarted: () => {},
 };
 
 // Create context
@@ -46,9 +63,7 @@ export const PlayerContext = createContext<GameContextProps>(defaultPlayerData);
 export const useGameContext = () => {
   const context = React.useContext(PlayerContext);
   if (!context) {
-    throw new Error(
-      "useGameContext must be used within a GameProvider"
-    );
+    throw new Error("useGameContext must be used within a GameProvider");
   }
   return context;
 };
@@ -56,35 +71,81 @@ export const useGameContext = () => {
 const { Provider } = PlayerContext;
 
 const GameProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
-  const [name, setPlayerName] = useState<string>(
-    defaultPlayerData.name
-  );
+  const [name, setName] = useState<string>(defaultPlayerData.name);
   const [hasJoined, setHasJoined] = useState<boolean>(
     defaultPlayerData.hasJoined
   );
-  console.log('name',name);
-  
-  const [score, setScore] = useState<number>(
-    defaultPlayerData.score
-  );
+  console.log("name", name);
+
+  const [score, setScore] = useState<number>(defaultPlayerData.score);
   const [freezePoint, setFreezePoint] = useState<number>(
     defaultPlayerData.freezePoint
   );
   const [isComputing, setIsComputing] = useState<boolean>(
     defaultPlayerData.isComputing
   );
-  const [speed, setSpeed] = useState<number>(
-    defaultPlayerData.speed
-  );
+  const [speed, setSpeed] = useState<number>(defaultPlayerData.speed);
   const [playersRanking, setPlayersRanking] = useState<IPlayer[]>(
     defaultPlayerData.playersRanking
   );
+  const [joinedPlayers, setJoinedPlayers] = useState<PlayerDto[]>(
+    defaultPlayerData.joinedPlayers
+  );
+
+  const [points, setPoints] = useState(defaultPlayerData.points);
+  const [multiplier, setMultiplier] = useState(defaultPlayerData.multiplier);
+
+  const gameStarted = () => {
+    console.log("game started");
+    setIsComputing(true);
+    const freezePoint: number = generateRandomNumber(1, 9, 2);
+    setFreezePoint(freezePoint);
+    const data: PlayerDto = {
+      name,
+      points,
+      multiplier,
+      freezePoint,
+    };
+    console.log(data);
+
+    socket.emit(WebSocketEvents.STARTS_ROUND, data);
+  };
+
+  useEffect(() => {
+    console.log("loaded");
+
+    socket.on(WebSocketEvents.STARTS_ROUND, (playerName: string) => {
+      console.log("playerName", playerName);
+
+      const data: PlayerDto = {
+        name,
+        points,
+        multiplier,
+      };
+      console.log("PlayerDto", data);
+      setIsComputing(true);
+      socket.emit(WebSocketEvents.ROUND_STARTED, data);
+    });
+    socket.on(WebSocketEvents.ROUND_STARTED, (initiatingClientName: string) => {
+      console.log(
+        "Round has started for initiating client:",
+        initiatingClientName
+      );
+      // Perform actions when the round starts for the initiating client
+    });
+
+    //Cleanup: Remove the event listeners when the component is unmounted
+    return () => {
+      socket.off(WebSocketEvents.STARTS_ROUND);
+      socket.off(WebSocketEvents.ROUND_STARTED);
+    };
+  }, []);
 
   const providerValues: GameContextProps = {
     name,
-    hasJoined, 
+    hasJoined,
     setHasJoined,
-    setPlayerName,
+    setName,
     score,
     setScore,
     freezePoint,
@@ -95,6 +156,13 @@ const GameProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
     setIsComputing,
     playersRanking,
     setPlayersRanking,
+    gameStarted,
+    points,
+    setPoints,
+    multiplier,
+    setMultiplier,
+    joinedPlayers,
+    setJoinedPlayers
   };
 
   return <Provider value={providerValues}>{children}</Provider>;

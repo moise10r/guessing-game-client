@@ -8,14 +8,14 @@ import { useState } from "react";
 
 
 export const Login: React.FC = () => {
-  const { setPlayerName, setHasJoined, hasJoined } = useGameContext();
+  const { setName, setHasJoined, hasJoined } = useGameContext();
   const [joiningPlayerName, setJoiningPlayerName] = useState('')
   let isDesabled = ((joiningPlayerName?.length) || 0) < 3;
 
   const handleJoinGame = () =>{
     setHasJoined(true)
-    setPlayerName(joiningPlayerName)
-    socket.emit(WebSocketEvents.PLAYER_JOIN,{joiningPlayerName})
+    setName(joiningPlayerName)
+    socket.emit(WebSocketEvents.PLAYER_JOIN,{name: joiningPlayerName})
   }
   return (
     <Card className="flex flex-col w-full h-full bg-dark-blue border border-[#5a6374] rounded-small py-48 px-20">

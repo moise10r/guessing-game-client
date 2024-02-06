@@ -7,6 +7,7 @@ import { socket } from "@/services/socket.service";
 import { WebSocketEvents } from "../../enums/socketevent.enum";
 import { IPlayer } from "@/interfaces/player.interface";
 import { useGameContext } from "@/context/gameContext/gameContext";
+import { PlayerDto } from "@/app/dto/playerRound.dto";
 
 interface ChatData {
   id?: string;
@@ -15,10 +16,9 @@ interface ChatData {
 }
 
 export const Chat: React.FC = () => {
-  const [joinedPlayers, setJoinedPlayers] = useState<IPlayer[]>([]);
   const [chatMessages, setChatMessages] = useState<ChatData[]>([]);
   const [message, setMessage] = useState<string>("");
-  const { name } = useGameContext();
+  const { name, points,multiplier,setIsComputing,joinedPlayers, setJoinedPlayers} = useGameContext();
 
   console.log("joinedPlayers", joinedPlayers);
 
@@ -30,13 +30,32 @@ export const Chat: React.FC = () => {
     socket.on(WebSocketEvents.PLAYER_ADDED, (players: IPlayer[]) => {
       setJoinedPlayers(players);
     });
+
+    socket.on(WebSocketEvents.STARTS_ROUND, (playerName: string) => {
+      console.log('playerName',playerName);
+      
+      const data: Omit<PlayerDto,'score'> = {
+        name,
+        points,
+        multiplier,
+      };
+      console.log('PlayerDto',data);
+      setIsComputing(true)
+      socket.emit(WebSocketEvents.ROUND_STARTED, data);
+    });
+    socket.on(WebSocketEvents.ROUND_STARTED, (initiatingClientName: string) => {
+      console.log('Round has started for initiating client:', initiatingClientName);
+      // Perform actions when the round starts for the initiating client
+    });
     return () => {
       socket.off();
     };
+    
   }, [chatMessages]);
 
   const handleSendMessage = () => {
     if (!message) {
+      // toast notification
       return;
     } else {
       socket.on(WebSocketEvents.CHAT, ({ name, message }) => {
@@ -54,7 +73,7 @@ export const Chat: React.FC = () => {
       <div className="flex items-center gap-4 mb-20">
         <Image src="/images/chat.png" alt="Logo" width={20} height={20} />
         <h3 className="text-white text-18">
-          chat (
+          Chat (
           { name && joinedPlayers.length > 0 ? joinedPlayers.length : "0"})
         </h3>
       </div>
@@ -62,9 +81,9 @@ export const Chat: React.FC = () => {
       <div className="flex flex-col justify-end bg-dark-blue pt-24 rounded-6 grow">
         {name ? (
           <ul className="px-16">
-            {chatMessages.map((chat: ChatData) => (
+            {chatMessages.map((chat: ChatData, index:number) => (
               <li
-                key={chat.name}
+                key={index}
                 className="w-full flex items-center gap-12 my-8"
               >
                 <p className="text-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#ff4326] to-[#6809dccb]">

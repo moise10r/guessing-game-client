@@ -1,16 +1,29 @@
-import React from 'react';
-import { Slider } from "@nextui-org/react";
+import React, { useState } from 'react';
+import Slider from '@mui/material/Slider';
 
 import Image from 'next/image';
 import { CustomButton } from '../shared';
+import { useGameContext } from '@/context/gameContext/gameContext';
+import { PlayerDto } from '@/app/dto/playerRound.dto';
+import { movePlayerToFirst } from '../../../utils/sortPlayers';
+
+interface CurrentRoundData {
+  name: string;
+  point: string;
+  multiple: string;
+}
+
+
+
 
 export const CurrentRound = () => {
 
-  interface CurrentRoundData {
-    name: string;
-    point: string;
-    multiple: string;
-  }
+  const {gameStarted,isComputing, name, setSpeed, joinedPlayers} = useGameContext()
+  const [speedStep,setSpeedStep] = useState(0)
+
+  
+  const sortedPlayers = movePlayerToFirst(joinedPlayers,name);
+
 
   const rowsData: CurrentRoundData[] = [
     {
@@ -59,13 +72,25 @@ export const CurrentRound = () => {
     },
   ]
 
+
+  const handleSpeed = (value:number): void => {
+    setSpeedStep(value)
+    if(value === 0) setSpeed(1)
+    if(value === 25) setSpeed(2)
+    if(value === 50) setSpeed(3)
+    if(value === 75) setSpeed(4)
+    if(value === 100) setSpeed(5)
+  }
+  
+
   return (
     <div className="flex flex-col w-full h-full rounded-small py-48 px-20">
       <CustomButton
         color="secondary"
         radius="sm"
         fullWidth
-        text="Start"
+        text={isComputing? 'Started':'Start'}
+        handleClick={gameStarted}
         className="h-[48px] text-22 font-semibold text-white bg-gradient-to-r from-[#e53d79] to-[#f75753]"
       />
 
@@ -87,11 +112,11 @@ export const CurrentRound = () => {
         </li>
         <li className="w-full">
           <ul className="w-full flex flex-col items-center  [&>li:nth-child(even)]:bg-dark-blue">
-            {rowsData.map((row: CurrentRoundData, index: number) => (
+            {sortedPlayers.map((row: PlayerDto, index: number) => (
               <li key={index} className="w-full flex items-center justify-between gap-24 px-24 py-8 bg-[#232833]">
-                <p className="flex-1 text-white text-sm">{row.name}</p>
-                <p className="flex-1 text-white text-sm">{row.point}</p>
-                <p className="flex-1 text-white text-sm">{row.multiple}</p>
+                <p className="flex-1 text-white text-sm">{row.name === name?'You':row.name}</p>
+                <p className="flex-1 text-white text-sm">{row.points?row.points:'-'}</p>
+                <p className="flex-1 text-white text-sm">{row.multiplier?row.multiplier:'-'}</p>
               </li>
             ))}
           </ul>
@@ -109,32 +134,43 @@ export const CurrentRound = () => {
         <h3 className="text-white text-18">Speed</h3>
       </div>
 
-      <div className='w-full h-[58px] flex items-center px-8 py-8 bg-dark-blue border border-[#5a6374] rounded-small'>
-        <Slider
-          // label="Select a value"
-          color="danger"
-          size="md"
-          step={10}
-          marks={[...speedMarks
-          ]}
-          defaultValue={25}
-          className="w-full max-w-md text-white h-[10px] bg-dark-blue"
-          classNames={{
-            // base: "max-w-md",
-            // filler: "bg-gradient-to-r from-primary-500 to-secondary-400",
-            // labelWrapper: "mb-2",
-            // label: "font-medium text-default-700 text-medium",
-            // value: "font-medium text-default-500 text-small",
-            thumb: [
-              "transition-size",
-              "w-6 h-6 rounded-2",
-              "bg-gradient-to-r from-[#e53d79] to-[#f75753]",
-              "data-[dragging=true]:shadow-lg data-[dragging=true]:shadow-black/20",
-              "data-[dragging=true]:w-7 data-[dragging=true]:h-7 data-[dragging=true]:after:h-6 data-[dragging=true]:after:w-6"
-            ],
-            // step: "data-[in-range=true]:bg-black/30 dark:data-[in-range=true]:bg-white/50"
-          }}
-        />
+      <div className='w-full flex items-center py-24 bg-dark-blue border border-[#5a6374] rounded-small'>
+      <div className='w-full h-[48px] flex items-center px-24'>
+          <Slider
+            aria-label="Temperature"
+            defaultValue={0}
+            value={speedStep}
+            onChange={(e, value:number): void =>handleSpeed(value)}
+            // getAriaValueText={valuetext}
+            valueLabelDisplay="off"
+            step={25}
+            marks={speedMarks}
+            // min={10}
+            // max={110}
+            classes={{
+              root: 'w-full ',
+              thumb: 'w-[25px] h-[25px] bg-[#e53d79] bg-gradient-to-r from-[#e53d79] to-[#f75753] border-2 border-white rounded-small',
+              track: 'h-[4px] bg-[#e53d79]',
+            }}
+            sx={{
+              color: '#afb7ca',
+              background: '',
+              'MuiSlider-valueLabel': {
+                color: 'white',
+              },
+              'MuiSlider-valueLabelLabel': {
+                color: 'white !important',
+              },
+              // Style the marks label with different colors
+              '& .MuiSlider-markLabel': {
+                color: 'white',
+              },
+              '& .MuiSlider-markLabelActive': {
+                background: 'bg-gradient-to-r from-[#ff4326] to-[#6809dccb]'
+              },
+            }}
+          />
+        </div>
       </div>
     </div>
   )

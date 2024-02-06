@@ -29,12 +29,13 @@ export const Chat: React.FC = () => {
     setFreezePoint,
     score,
     freezePoint,
-    setPlayersRanking
+    setPlayersRanking,
+    setScore,
+    isComputing
   } = useGameContext();
 
-  console.log("joinedPlayers", joinedPlayers);
-
   useEffect(() => {
+    console.log("joinedPlayersmultiplier", multiplier);
     socket.on(WebSocketEvents.CHAT, ({ name, message }) => {
       setChatMessages([...chatMessages, { name, message }]);
       console.log("chat", chatMessages);
@@ -44,29 +45,35 @@ export const Chat: React.FC = () => {
     });
 
     socket.on(WebSocketEvents.ROUND_ENDED, () => {
-      const player = {
-        name,
-        multiplier,
-        score,
-        points,
-        freezePoint
+        const player = {
+          name,
+          multiplier,
+          score,
+          points,
+          freezePoint,
+        };
+        // only only players who is not computed
+        if(isComputing){
+        const rankPlayer = computerScoreForPlayer(player);
+        console.log("rankPlayer", rankPlayer);
+        setScore(rankPlayer.score);
+        socket.emit(WebSocketEvents.SEND_SCORE, rankPlayer);
+        setIsComputing(false);
       }
-      const rankPlayer = computerScoreForPlayer(player)
-      console.log('rankPlayer',rankPlayer);
-      socket.emit(WebSocketEvents.SEND_SCORE,rankPlayer)
     });
 
     socket.on(WebSocketEvents.SEND_SCORE, (players: RankPlayer[]) => {
-      setPlayersRanking(players)
+      setPlayersRanking(players);
     });
 
     socket.on(WebSocketEvents.STARTS_ROUND, (initiatorPlayer: IPlayer) => {
       console.log("playerName", initiatorPlayer); // who initialized the game
-      const data: Omit<IPlayer, 'score'> = {
+      console.log("joinedPlayersmultiplier", multiplier);
+      const data: Omit<IPlayer, "score"> = {
         name,
         points,
         multiplier,
-        freezePoint: initiatorPlayer.freezePoint
+        freezePoint: initiatorPlayer.freezePoint,
       };
       setFreezePoint(initiatorPlayer.freezePoint);
       console.log("IPlayer", data);
@@ -83,7 +90,19 @@ export const Chat: React.FC = () => {
     return () => {
       socket.off();
     };
-  }, [chatMessages]);
+  }, [
+    chatMessages,
+    freezePoint,
+    multiplier,
+    name,
+    points,
+    score,
+    setFreezePoint,
+    setIsComputing,
+    setJoinedPlayers,
+    setPlayersRanking,
+    setScore
+  ]);
 
   const handleSendMessage = () => {
     if (!message) {

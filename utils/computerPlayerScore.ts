@@ -3,7 +3,7 @@ import { RankPlayer } from "@/interfaces/player.interface";
 
 
 export const computerScoreForPlayer = (player: IPlayer): RankPlayer => {
-    if (player.multiplier === player.freezePoint) {
+    if (player.multiplier < player.freezePoint) {
       // Player guessed correctly, update score
       player.score += player.points * player.multiplier;
     } else {

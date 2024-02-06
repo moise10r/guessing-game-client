@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import Slider from '@mui/material/Slider';
+import React, { useState } from "react";
+import Slider from "@mui/material/Slider";
 
-import Image from 'next/image';
-import { CustomButton } from '../shared';
-import { useGameContext } from '@/context/gameContext/gameContext';
-import { IPlayer } from '@/app/dto/playerRound.dto';
-import { movePlayerToFirst } from '../../../utils/sortPlayers';
+import Image from "next/image";
+import { CustomButton } from "../shared";
+import { useGameContext } from "@/context/gameContext/gameContext";
+import { IPlayer } from "@/app/dto/playerRound.dto";
+import { movePlayerToFirst } from "../../../utils/sortPlayers";
 
 interface CurrentRoundData {
   name: string;
@@ -13,17 +13,18 @@ interface CurrentRoundData {
   multiple: string;
 }
 
-
-
-
 export const CurrentRound = () => {
+  const {
+    gameStarted,
+    isComputing,
+    name,
+    setSpeed,
+    joinedPlayers,
+    freezePoint,
+  } = useGameContext();
+  const [speedStep, setSpeedStep] = useState(0);
 
-  const {gameStarted,isComputing, name, setSpeed, joinedPlayers} = useGameContext()
-  const [speedStep,setSpeedStep] = useState(0)
-
-  
-  const sortedPlayers = movePlayerToFirst(joinedPlayers,name);
-
+  const sortedPlayers = movePlayerToFirst(joinedPlayers, name);
 
   const rowsData: CurrentRoundData[] = [
     {
@@ -48,7 +49,6 @@ export const CurrentRound = () => {
     },
   ];
 
-
   const speedMarks = [
     {
       value: 0,
@@ -70,18 +70,16 @@ export const CurrentRound = () => {
       value: 100,
       label: "5x",
     },
-  ]
+  ];
 
-
-  const handleSpeed = (value:number): void => {
-    setSpeedStep(value)
-    if(value === 0) setSpeed(1)
-    if(value === 25) setSpeed(2)
-    if(value === 50) setSpeed(3)
-    if(value === 75) setSpeed(4)
-    if(value === 100) setSpeed(5)
-  }
-  
+  const handleSpeed = (value: number): void => {
+    setSpeedStep(value);
+    if (value === 0) setSpeed(1);
+    if (value === 25) setSpeed(2);
+    if (value === 50) setSpeed(3);
+    if (value === 75) setSpeed(4);
+    if (value === 100) setSpeed(5);
+  };
 
   return (
     <div className="flex flex-col w-full h-full rounded-small py-48 px-20">
@@ -89,10 +87,14 @@ export const CurrentRound = () => {
         color="secondary"
         radius="sm"
         fullWidth
-        text={isComputing? 'Started':'Start'}
+        text={isComputing ? "Started" : "Start"}
         handleClick={gameStarted}
         className={`h-[48px] text-white bg-gradient-to-r
-        ${isComputing ? 'from-[#5a6374] to-[#5a6374] cursor-not-allowed' : 'from-[#e53d79] to-[#f75753]'}
+        ${
+          isComputing
+            ? "from-[#5a6374] to-[#5a6374] cursor-not-allowed"
+            : "from-[#e53d79] to-[#f75753]"
+        }
          `}
       />
 
@@ -113,16 +115,46 @@ export const CurrentRound = () => {
           <p className="flex-1 text-sm">Score</p>
         </li>
         <li className="w-full">
-          <ul className="w-full flex flex-col items-center  [&>li:nth-child(even)]:bg-dark-blue">
-            {sortedPlayers.map((row: IPlayer, index: number) => (
-              <li key={index} className="w-full flex items-center justify-between gap-24 px-24 py-8 bg-[#232833]">
-                <p className="flex-1 text-white text-sm">{row.name === name?'You':row.name}</p>
-                <p className="flex-1 text-white text-sm">{row.points?row.points:'-'}</p>
-                <p className="flex-1 text-white text-sm">{row.multiplier?row.multiplier:'-'}</p>
+          <ul className="w-full flex flex-col items-center">
+            {sortedPlayers.map((player: IPlayer, index: number) => (
+              <li
+                key={index}
+                className={`w-full flex items-center justify-between gap-24 px-24 py-8 bg-${
+                  index % 2 === 0 ? "dark-blue" : "#232833"
+                }`}
+              >
+                <p
+                  className={`flex-1 ${
+                    player.multiplier < freezePoint
+                      ? "text-[#15803d]"
+                      : player.multiplier > freezePoint
+                      ? "text-[#9f1239]"
+                      : "text-white"
+                  }`}
+                >
+                  {player.name === name ? "You" : player.name}
+                </p>
+                <p  className={`flex-1 ${
+                    player.multiplier < freezePoint
+                      ? "text-[#15803d]"
+                      : player.multiplier > freezePoint
+                      ? "text-[#9f1239]"
+                      : "text-white"
+                  }`}>
+                  {player.points ?? "-"}
+                </p>
+                <p  className={`flex-1 ${
+                    player.multiplier < freezePoint
+                      ? "text-[#15803d]"
+                      : player.multiplier > freezePoint
+                      ? "text-[#9f1239]"
+                      : "text-white"
+                  }`}>
+                  {player.multiplier ?? "-"}
+                </p>
               </li>
             ))}
           </ul>
-
         </li>
       </ul>
 
@@ -136,13 +168,13 @@ export const CurrentRound = () => {
         <h3 className="text-white text-18">Speed</h3>
       </div>
 
-      <div className='w-full flex items-center py-24 bg-dark-blue border border-[#5a6374] rounded-small'>
-      <div className='w-full h-[48px] flex items-center px-24'>
+      <div className="w-full flex items-center py-24 bg-dark-blue border border-[#5a6374] rounded-small">
+        <div className="w-full h-[48px] flex items-center px-24">
           <Slider
             aria-label="Temperature"
             defaultValue={0}
             value={speedStep}
-            onChange={(e, value:number): void =>handleSpeed(value)}
+            onChange={(e, value: number): void => handleSpeed(value)}
             // getAriaValueText={valuetext}
             valueLabelDisplay="off"
             step={25}
@@ -150,30 +182,31 @@ export const CurrentRound = () => {
             // min={10}
             // max={110}
             classes={{
-              root: 'w-full ',
-              thumb: 'w-[25px] h-[25px] bg-[#e53d79] bg-gradient-to-r from-[#e53d79] to-[#f75753] border-2 border-white rounded-small',
-              track: 'h-[4px] bg-[#e53d79]',
+              root: "w-full ",
+              thumb:
+                "w-[25px] h-[25px] bg-[#e53d79] bg-gradient-to-r from-[#e53d79] to-[#f75753] border-2 border-white rounded-small",
+              track: "h-[4px] bg-[#e53d79]",
             }}
             sx={{
-              color: '#afb7ca',
-              background: '',
-              'MuiSlider-valueLabel': {
-                color: 'white',
+              color: "#afb7ca",
+              background: "",
+              "MuiSlider-valueLabel": {
+                color: "white",
               },
-              'MuiSlider-valueLabelLabel': {
-                color: 'white !important',
+              "MuiSlider-valueLabelLabel": {
+                color: "white !important",
               },
               // Style the marks label with different colors
-              '& .MuiSlider-markLabel': {
-                color: 'white',
+              "& .MuiSlider-markLabel": {
+                color: "white",
               },
-              '& .MuiSlider-markLabelActive': {
-                background: 'bg-gradient-to-r from-[#ff4326] to-[#6809dccb]'
+              "& .MuiSlider-markLabelActive": {
+                background: "bg-gradient-to-r from-[#ff4326] to-[#6809dccb]",
               },
             }}
           />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

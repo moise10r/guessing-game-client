@@ -39,7 +39,7 @@ export default function Home() {
   const headerItems = [
     {
       icon: "/images/medal.webp",
-      text: "Home",
+      text: score,
       size: "md",
     },
     {

@@ -18,7 +18,14 @@ interface ChatData {
 export const Chat: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<ChatData[]>([]);
   const [message, setMessage] = useState<string>("");
-  const { name, points,multiplier,setIsComputing,joinedPlayers, setJoinedPlayers} = useGameContext();
+  const {
+    name,
+    points,
+    multiplier,
+    setIsComputing,
+    joinedPlayers,
+    setJoinedPlayers,
+  } = useGameContext();
 
   console.log("joinedPlayers", joinedPlayers);
 
@@ -27,30 +34,32 @@ export const Chat: React.FC = () => {
       setChatMessages([...chatMessages, { name, message }]);
       console.log("chat", chatMessages);
     });
-    socket.on(WebSocketEvents.PLAYER_ADDED, (players: IPlayer[]) => {
+    socket.on(WebSocketEvents.PLAYER_ADDED, (players: PlayerDto[]) => {
       setJoinedPlayers(players);
     });
 
     socket.on(WebSocketEvents.STARTS_ROUND, (playerName: string) => {
-      console.log('playerName',playerName);
-      
-      const data: Omit<PlayerDto,'score'> = {
+      console.log("playerName", playerName);
+
+      const data: Omit<PlayerDto, "score"> = {
         name,
         points,
         multiplier,
       };
-      console.log('PlayerDto',data);
-      setIsComputing(true)
+      console.log("PlayerDto", data);
+      setIsComputing(true);
       socket.emit(WebSocketEvents.ROUND_STARTED, data);
     });
     socket.on(WebSocketEvents.ROUND_STARTED, (initiatingClientName: string) => {
-      console.log('Round has started for initiating client:', initiatingClientName);
+      console.log(
+        "Round has started for initiating client:",
+        initiatingClientName
+      );
       // Perform actions when the round starts for the initiating client
     });
     return () => {
       socket.off();
     };
-    
   }, [chatMessages]);
 
   const handleSendMessage = () => {
@@ -73,25 +82,40 @@ export const Chat: React.FC = () => {
       <div className="flex items-center gap-4 mb-20">
         <Image src="/images/chat.png" alt="Logo" width={20} height={20} />
         <h3 className="text-white text-18">
-          Chat (
-          { name && joinedPlayers.length > 0 ? joinedPlayers.length : "0"})
+          Chat ({name && joinedPlayers.length > 0 ? joinedPlayers.length : "0"})
         </h3>
       </div>
 
       <div className="flex flex-col justify-end bg-dark-blue pt-24 rounded-6 grow">
         {name ? (
           <ul className="px-16">
-            {chatMessages.map((chat: ChatData, index:number) => (
+            {chatMessages.map((chat: ChatData, index: number) => (
               <li
                 key={index}
-                className="w-full flex items-center gap-12 my-8"
+                className={`w-full flex ${
+                  chat.name === name ? "justify-end" : "items-center"
+                } gap-12 my-8`}
               >
-                <p className="text-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#ff4326] to-[#6809dccb]">
-                  {chat.name}
-                </p>
-                <p className="text-white text-10 px-6 py-2 bg-[#eeeeee78] rounded-4">
-                  {chat.message}
-                </p>
+                {chat.name === name ? (
+                  <>
+                    <p className="text-white text-10 px-6 py-2 bg-[#eeeeee78] rounded-4">
+                      {chat.message}
+                    </p>
+                    <p className="text-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#ff4326] to-[#6809dccb]">
+                      {chat.name}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <p className="text-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-[#ff4326] to-[#6809dccb]">
+                      {chat.name}
+                    </p>
+                    <p className="text-white text-10 px-6 py-2 bg-[#eeeeee78] rounded-4">
+                      {chat.message}
+                    </p>
+                  </>
+                )}
               </li>
             ))}
           </ul>

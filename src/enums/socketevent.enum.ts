@@ -6,4 +6,6 @@ export enum WebSocketEvents {
   ROUND_STARTED = 'round_started',
   CHAT = 'chat_message',
   BROADCAST_FREEZE_POINT = 'send_freeze_point',
+  ROUND_ENDED = 'round_ended',
+  SEND_SCORE = 'send_score',
 }

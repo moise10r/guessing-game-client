@@ -4,7 +4,7 @@ import Slider from '@mui/material/Slider';
 import Image from 'next/image';
 import { CustomButton } from '../shared';
 import { useGameContext } from '@/context/gameContext/gameContext';
-import { PlayerDto } from '@/app/dto/playerRound.dto';
+import { IPlayer } from '@/app/dto/playerRound.dto';
 import { movePlayerToFirst } from '../../../utils/sortPlayers';
 
 interface CurrentRoundData {
@@ -114,7 +114,7 @@ export const CurrentRound = () => {
         </li>
         <li className="w-full">
           <ul className="w-full flex flex-col items-center  [&>li:nth-child(even)]:bg-dark-blue">
-            {sortedPlayers.map((row: PlayerDto, index: number) => (
+            {sortedPlayers.map((row: IPlayer, index: number) => (
               <li key={index} className="w-full flex items-center justify-between gap-24 px-24 py-8 bg-[#232833]">
                 <p className="flex-1 text-white text-sm">{row.name === name?'You':row.name}</p>
                 <p className="flex-1 text-white text-sm">{row.points?row.points:'-'}</p>

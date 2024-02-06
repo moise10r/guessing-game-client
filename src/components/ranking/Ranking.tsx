@@ -1,4 +1,6 @@
 'use client';
+import { useGameContext } from "@/context/gameContext/gameContext";
+import { RankPlayer } from "@/interfaces/player.interface";
 import Image from "next/image";
 
 export const Ranking: React.FC = () => {
@@ -30,6 +32,12 @@ export const Ranking: React.FC = () => {
     }
   ];
 
+  let tableIndx = 0
+
+  const {
+   playersRanking
+  } = useGameContext();
+
   return (
        <article className="w-6/12 md:min-w-[480px] grow">
       <div className="flex items-center gap-4 mb-20">
@@ -50,11 +58,11 @@ export const Ranking: React.FC = () => {
         </li>
         <li className="w-full">
           <ul className="w-full flex flex-col items-center  [&>li:nth-child(even)]:bg-dark-blue">
-            {rowsData.map((row) => (
-              <li key={row.key} className="w-full flex items-center justify-between gap-24 px-24 py-8 bg-[#232833]">
-                <p className="flex-1 text-white text-sm">{row.key}</p>
-                <p className="flex-1 text-white text-sm">{row.name}</p>
-                <p className="flex-1 text-white text-sm">{row.score}</p>
+            {playersRanking.map((player: RankPlayer, index:number) => (
+              <li key={index} className="w-full flex items-center justify-between gap-24 px-24 py-8 bg-[#232833]">
+                <p className="flex-1 text-white text-sm">{tableIndx++}</p>
+                <p className="flex-1 text-white text-sm">{player.name}</p>
+                <p className="flex-1 text-white text-sm">{player.score}</p>
               </li>
             ))}
           </ul>

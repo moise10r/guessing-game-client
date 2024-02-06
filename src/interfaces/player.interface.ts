@@ -1,4 +1,4 @@
-export type IPlayer = {
+export type RankPlayer = {
     name: string;
     score?: number;
   };

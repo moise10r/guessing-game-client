@@ -5,9 +5,10 @@ import { CustomButton } from "../shared";
 import React, { useEffect, useState } from "react";
 import { socket } from "@/services/socket.service";
 import { WebSocketEvents } from "../../enums/socketevent.enum";
-import { IPlayer } from "@/interfaces/player.interface";
 import { useGameContext } from "@/context/gameContext/gameContext";
-import { PlayerDto } from "@/app/dto/playerRound.dto";
+import { IPlayer } from "@/app/dto/playerRound.dto";
+import { computerScoreForPlayer } from "../../../utils/computerPlayerScore";
+import { RankPlayer } from "@/interfaces/player.interface";
 
 interface ChatData {
   id?: string;
@@ -25,7 +26,10 @@ export const Chat: React.FC = () => {
     setIsComputing,
     joinedPlayers,
     setJoinedPlayers,
-    setFreezePoint
+    setFreezePoint,
+    score,
+    freezePoint,
+    setPlayersRanking
   } = useGameContext();
 
   console.log("joinedPlayers", joinedPlayers);
@@ -35,20 +39,37 @@ export const Chat: React.FC = () => {
       setChatMessages([...chatMessages, { name, message }]);
       console.log("chat", chatMessages);
     });
-    socket.on(WebSocketEvents.PLAYER_ADDED, (players: PlayerDto[]) => {
+    socket.on(WebSocketEvents.PLAYER_ADDED, (players: IPlayer[]) => {
       setJoinedPlayers(players);
     });
 
-    socket.on(WebSocketEvents.STARTS_ROUND, (initiatorPlayer: PlayerDto) => {
+    socket.on(WebSocketEvents.ROUND_ENDED, () => {
+      const player = {
+        name,
+        multiplier,
+        score,
+        points,
+        freezePoint
+      }
+      const rankPlayer = computerScoreForPlayer(player)
+      console.log('rankPlayer',rankPlayer);
+      socket.emit(WebSocketEvents.SEND_SCORE,rankPlayer)
+    });
+
+    socket.on(WebSocketEvents.SEND_SCORE, (players: RankPlayer[]) => {
+      setPlayersRanking(players)
+    });
+
+    socket.on(WebSocketEvents.STARTS_ROUND, (initiatorPlayer: IPlayer) => {
       console.log("playerName", initiatorPlayer); // who initialized the game
-      const data: PlayerDto = {
+      const data: Omit<IPlayer, 'score'> = {
         name,
         points,
         multiplier,
         freezePoint: initiatorPlayer.freezePoint
       };
       setFreezePoint(initiatorPlayer.freezePoint);
-      console.log("PlayerDto", data);
+      console.log("IPlayer", data);
       setIsComputing(true);
       socket.emit(WebSocketEvents.ROUND_STARTED, data);
     });
@@ -90,7 +111,7 @@ export const Chat: React.FC = () => {
 
       <div className="flex flex-col justify-end bg-dark-blue pt-24 rounded-6 grow">
         {name ? (
-          <ul className="px-16 max-h-[140px] scroll-auto">
+          <ul className="px-16 max-h-[140px] min-h-[140px] scroll-auto">
             {chatMessages.map((chat: ChatData, index: number) => (
               <li
                 key={index}

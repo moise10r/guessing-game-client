@@ -7,6 +7,9 @@ import {
 } from "recharts";
 import CountUp from "react-countup";
 import { useGameContext } from "@/context/gameContext/gameContext";
+import { computerScoreForPlayer } from "../../../utils/computerPlayerScore";
+import { socket } from "@/services/socket.service";
+import { WebSocketEvents } from "@/enums/socketevent.enum";
 // const CustomizedDot = (props) => {
 //   const { cx, cy, stroke, payload, value } = props;
 
@@ -40,7 +43,7 @@ import { useGameContext } from "@/context/gameContext/gameContext";
 // };
 
 const GraphBoard = () => {
-  const { freezePoint, speed, isComputing } = useGameContext();
+  const { freezePoint, speed, isComputing, score, name, multiplier,points } = useGameContext();
   const graphValue = [{ value: 0 }, { value: 0 }, { value: freezePoint }];
 
   function duration() {
@@ -59,7 +62,19 @@ console.log('freezePoint',freezePoint);
             console.log("number", number, freezePoint); // Output: 4.96
             if (number === freezePoint) {
                 observer.disconnect()
-              console.log("session finished");
+              console.log("game finished");
+              // compute score
+              const player = {
+                name,
+                multiplier,
+                score,
+                points,
+                freezePoint
+              }
+              const rankPlayer = computerScoreForPlayer(player)
+              console.log('rankPlayer',rankPlayer);
+              socket.emit(WebSocketEvents.ROUND_ENDED, rankPlayer)
+              
             }
           }
         }

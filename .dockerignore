@@ -1,0 +1,20 @@
+# Next.js specific files
+.cache
+
+# Build artifacts
+# node_modules
+npm-debug.log
+yarn-error.log
+
+# Editor and IDE files
+.vscode
+
+# Development files
+# .env
+# .env.development
+# .env.production
+
+.git/
+.gitignore
+.dockerignore
+Dockerfile*

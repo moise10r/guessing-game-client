@@ -110,12 +110,12 @@ export const CurrentRound = () => {
 
       <ul className="w-full flex flex-col items-center border border-[#1a1d26] rounded-6">
         <li className="w-full flex items-center justify-between pl-28 py-8 text-12 text-[#8c94a8]">
-          <p className="flex-1 text-md">No</p>
-          <p className="flex-1 text-sm">Name</p>
-          <p className="flex-1 text-sm">Score</p>
+          <p className="flex-1 text-md">Name</p>
+          <p className="flex-1 text-sm">Points</p>
+          <p className="flex-1 text-sm">Multiplier</p>
         </li>
         <li className="w-full">
-          <ul className="w-full flex flex-col items-center">
+          <ul className="w-full flex flex-col items-center mx-w-[250px] overflow-scroll">
             {sortedPlayers.map((player: IPlayer, index: number) => (
               <li
                 key={index}
@@ -125,29 +125,29 @@ export const CurrentRound = () => {
               >
                 <p
                   className={`flex-1 ${
-                    player.multiplier < freezePoint
+                    !isComputing && player.multiplier < freezePoint
                       ? "text-[#15803d]"
-                      : player.multiplier > freezePoint
-                      ? "text-[#9f1239]"
+                      : !isComputing && player.multiplier > freezePoint
+                      ? "text-[#f14e5f]"
                       : "text-white"
                   }`}
                 >
                   {player.name === name ? "You" : player.name}
                 </p>
                 <p  className={`flex-1 ${
-                    player.multiplier < freezePoint
+                    !isComputing && player.multiplier < freezePoint
                       ? "text-[#15803d]"
-                      : player.multiplier > freezePoint
-                      ? "text-[#9f1239]"
+                      : !isComputing && player.multiplier > freezePoint
+                      ? "text-[#f14e5f]"
                       : "text-white"
                   }`}>
                   {player.points ?? "-"}
                 </p>
                 <p  className={`flex-1 ${
-                    player.multiplier < freezePoint
+                    !isComputing && player.multiplier < freezePoint
                       ? "text-[#15803d]"
-                      : player.multiplier > freezePoint
-                      ? "text-[#9f1239]"
+                      : !isComputing && player.multiplier > freezePoint
+                      ? "text-[#f14e5f]"
                       : "text-white"
                   }`}>
                   {player.multiplier ?? "-"}
@@ -195,6 +195,9 @@ export const CurrentRound = () => {
               },
               "MuiSlider-valueLabelLabel": {
                 color: "white !important",
+              },
+              "& .MuiSlider-track":{
+                backgroundColor: '#e53d79'
               },
               // Style the marks label with different colors
               "& .MuiSlider-markLabel": {

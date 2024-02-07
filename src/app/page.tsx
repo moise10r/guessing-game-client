@@ -112,13 +112,13 @@ export default function Home() {
             ))}
           </ul>
 
-          <div  className="w-full grow bg-dark-blue border border-[#5a6374] rounded-small flex justify-center items-center relative">
+          <div  className="w-full grow bg-dark-blue border border-[#5a6374] rounded-small flex justify-center items-center relative max-h-[600px]">
             <GraphBoard/>
           </div>
         </div>
       </div>
 
-      <div className="w-full max-w-7xl flex gap-16 flex-wrap mt-24">
+      <div className="w-full max-w-7xl flex gap-16 flex-wrap mt-[30px]">
         <Ranking />
         <Chat />
       </div>

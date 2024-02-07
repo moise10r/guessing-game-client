@@ -35,10 +35,8 @@ export const Chat: React.FC = () => {
   } = useGameContext();
 
   useEffect(() => {
-    console.log("joinedPlayersmultiplier", multiplier);
     socket.on(WebSocketEvents.CHAT, ({ name, message }) => {
       setChatMessages([...chatMessages, { name, message }]);
-      console.log("chat", chatMessages);
     });
     socket.on(WebSocketEvents.PLAYER_ADDED, (players: IPlayer[]) => {
       setJoinedPlayers(players);
@@ -55,7 +53,6 @@ export const Chat: React.FC = () => {
         // only only players who is not computed
         if(isComputing){
         const rankPlayer = computerScoreForPlayer(player);
-        console.log("rankPlayer", rankPlayer);
         setScore(rankPlayer.score);
         socket.emit(WebSocketEvents.SEND_SCORE, rankPlayer);
         setIsComputing(false);
@@ -67,8 +64,6 @@ export const Chat: React.FC = () => {
     });
 
     socket.on(WebSocketEvents.STARTS_ROUND, (initiatorPlayer: IPlayer) => {
-      console.log("playerName", initiatorPlayer); // who initialized the game
-      console.log("joinedPlayersmultiplier", multiplier);
       const data: Omit<IPlayer, "score"> = {
         name,
         points,
@@ -101,7 +96,8 @@ export const Chat: React.FC = () => {
     setIsComputing,
     setJoinedPlayers,
     setPlayersRanking,
-    setScore
+    setScore,
+    isComputing
   ]);
 
   const handleSendMessage = () => {

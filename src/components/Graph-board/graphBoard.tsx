@@ -3,47 +3,21 @@ import {
   LineChart,
   Line,
   XAxis,
-  YAxis
+  YAxis,
+  ResponsiveContainer
+
 } from "recharts";
 import CountUp from "react-countup";
 import { useGameContext } from "@/context/gameContext/gameContext";
 import { socket } from "@/services/socket.service";
 import { WebSocketEvents } from "@/enums/socketevent.enum";
-// const CustomizedDot = (props) => {
-//   const { cx, cy, stroke, payload, value } = props;
+import CustomAxis from "../customXaxis/customAxis";
 
-//   if (value > 2500) {
-//     return (
-//       <svg
-//         x={cx - 10}
-//         y={cy - 10}
-//         width={20}
-//         height={20}
-//         fill="red"
-//         viewBox="0 0 1024 1024"
-//       >
-//         <path d="M512 1009.984c-274.912 0-497.76-222.848-497.76-497.76s222.848-497.76 497.76-497.76c274.912 0 497.76 222.848 497.76 497.76s-222.848 497.76-497.76 497.76zM340.768 295.936c-39.488 0-71.52 32.8-71.52 73.248s32.032 73.248 71.52 73.248c39.488 0 71.52-32.8 71.52-73.248s-32.032-73.248-71.52-73.248zM686.176 296.704c-39.488 0-71.52 32.8-71.52 73.248s32.032 73.248 71.52 73.248c39.488 0 71.52-32.8 71.52-73.248s-32.032-73.248-71.52-73.248zM772.928 555.392c-18.752-8.864-40.928-0.576-49.632 18.528-40.224 88.576-120.256 143.552-208.832 143.552-85.952 0-164.864-52.64-205.952-137.376-9.184-18.912-31.648-26.592-50.08-17.28-18.464 9.408-21.216 21.472-15.936 32.64 52.8 111.424 155.232 186.784 269.76 186.784 117.984 0 217.12-70.944 269.76-186.784 8.672-19.136 9.568-31.2-9.12-40.096z" />
-//       </svg>
-//     );
-//   }
-
-//   return (
-//     <svg
-//       x={cx - 10}
-//       y={cy - 10}
-//       width={20}
-//       height={20}
-//       fill="green"
-//       viewBox="0 0 1024 1024"
-//     >
-//       <path d="M517.12 53.248q95.232 0 179.2 36.352t145.92 98.304 98.304 145.92 36.352 179.2-36.352 179.2-98.304 145.92-145.92 98.304-179.2 36.352-179.2-36.352-145.92-98.304-98.304-145.92-36.352-179.2 36.352-179.2 98.304-145.92 145.92-98.304 179.2-36.352zM663.552 261.12q-15.36 0-28.16 6.656t-23.04 18.432-15.872 27.648-5.632 33.28q0 35.84 21.504 61.44t51.2 25.6 51.2-25.6 21.504-61.44q0-17.408-5.632-33.28t-15.872-27.648-23.04-18.432-28.16-6.656zM373.76 261.12q-29.696 0-50.688 25.088t-20.992 60.928 20.992 61.44 50.688 25.6 50.176-25.6 20.48-61.44-20.48-60.928-50.176-25.088zM520.192 602.112q-51.2 0-97.28 9.728t-82.944 27.648-62.464 41.472-35.84 51.2q-1.024 1.024-1.024 2.048-1.024 3.072-1.024 8.704t2.56 11.776 7.168 11.264 12.8 6.144q25.6-27.648 62.464-50.176 31.744-19.456 79.36-35.328t114.176-15.872q67.584 0 116.736 15.872t81.92 35.328q37.888 22.528 63.488 50.176 17.408-5.12 19.968-18.944t0.512-18.944-3.072-7.168-1.024-3.072q-26.624-55.296-100.352-88.576t-176.128-33.28z" />
-//     </svg>
-//   );
-// };
 
 const GraphBoard = () => {
   const { freezePoint, speed, isComputing, score, name, multiplier,points, setScore } = useGameContext();
   const graphValue = [{ value: 0 }, { value: 0 }, { value: freezePoint }];
+  const [isRoundEnded, setIsRoundEnded] = useState<boolean>(false);
 
   function duration() {
     return 3000 + 1000 * speed;
@@ -58,22 +32,20 @@ console.log('freezePoint',freezePoint);
           const rasiedMultiplier = muliplierWatchedValue.match(/[\d.]+/); // get the number value expect x
           if (rasiedMultiplier && rasiedMultiplier.length > 0) {
             const number = +rasiedMultiplier[0];
-            console.log("number", number, freezePoint); // Output: 4.96
             if (number === freezePoint && freezePoint !== 0) {
                 observer.disconnect()
                 socket.emit(WebSocketEvents.ROUND_ENDED)
+                setIsRoundEnded(true)
             }
           }
         }
       });
     });
 
-    // const body = document counter.querySelector('span')
     const counter = document.querySelector("#counter") as HTMLElement;
-    const spans = counter.querySelector("span") as HTMLElement;
-    console.log("freezePoint here", freezePoint);
+    const span = counter.querySelector("span") as HTMLElement;
 
-    observer.observe(spans, {
+    observer.observe(span, {
       attributes: true,
       childList: true,
       subtree: true,
@@ -83,10 +55,13 @@ console.log('freezePoint',freezePoint);
       observer.disconnect();
     };
   }, [freezePoint, isComputing]);
+
+  const customTicks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
   return (
-    <div className="col-12 mt-3">
-      <div className="card-box graph-box">
-        <div className="result" id="counter">
+    <div className="w-full">
+      <div className="graph-container relative flex justify-center items-center p-2 h-[300px] w-[700px]">
+        <div className={`${isRoundEnded?'text-[#f14e5f]':'text-white'} text-[64px] absolute z-50 top-[20px] right-[25%] font-extrabold`} id="counter">
           <CountUp
             start={0}
             end={freezePoint}
@@ -99,26 +74,28 @@ console.log('freezePoint',freezePoint);
             suffix="x"
           ></CountUp>
         </div>
-
-        <LineChart
-          width={500}
-          height={300}
-          data={graphValue}
-          key={Math.random()}
-        >
-          <Line
-            type="monotone"
-            dataKey="value"
-            strokeWidth={6}
-            stroke="#fb544e"
-            dot={false}
-            animationDuration={duration()}
-            hide={freezePoint === 0}
-          />
-          <YAxis domain={[0, 10]} hide={true} />
-          <XAxis dataKey={"value"} hide={false} />
-          {/* <XAxis  dataKey="value" hide={false} height={60} tick={<CustomizedAxisTick />} /> */}
-        </LineChart>
+         <div className="w-[98%] mx-auto">
+             <LineChart
+              width={700}
+              height={300}
+              key={Math.random()}
+                     >
+              <Line
+                type="monotone"
+                dataKey="value"
+                strokeWidth={6}
+                stroke="#fb544e"
+                data={graphValue}
+                dot={false}
+                animationDuration={duration()}
+                hide={freezePoint === 0}
+              />
+              <YAxis domain={[0, 10]} hide={true} />
+              <XAxis dataKey={'value'}  domain={[1, 10]} label={{ value: '', position: 'insideBottom', offset: -10,  }}
+              axisLine={{ stroke: '#5a6373', strokeWidth: 1 }} tickLine={false} ticks={customTicks}
+              tick={{ stroke: '#5a6373', strokeWidth: 0.5 }} style={{paddingTop:'10px'}} />
+                     </LineChart>
+         </div>
       </div>
     </div>
   );

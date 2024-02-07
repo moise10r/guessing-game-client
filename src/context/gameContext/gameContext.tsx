@@ -75,7 +75,6 @@ const GameProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
   const [hasJoined, setHasJoined] = useState<boolean>(
     defaultPlayerData.hasJoined
   );
-  console.log("name", name);
 
   const [score, setScore] = useState<number>(defaultPlayerData.score);
   const [freezePoint, setFreezePoint] = useState<number>(
@@ -96,11 +95,9 @@ const GameProvider: NextPage<{ children: ReactNode }> = ({ children }) => {
   const [multiplier, setMultiplier] = useState(defaultPlayerData.multiplier);
 
   const gameStarted = () => {
-    console.log("game started");
     setIsComputing(true);
     const freezePoint: number = generateRandomNumber(1, 9, 2);
     setFreezePoint(freezePoint);
-    console.log('freezePoint',freezePoint);
     
     const data: Omit<IPlayer, 'score'> = {
       name,

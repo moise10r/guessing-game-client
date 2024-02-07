@@ -5,6 +5,7 @@ import { CustomButton } from "../shared";
 import { socket } from "@/services/socket.service";
 import { WebSocketEvents } from "../../enums/socketevent.enum";
 import { useState } from "react";
+import { toast } from "sonner";
 
 
 export const Login: React.FC = () => {
@@ -16,6 +17,8 @@ export const Login: React.FC = () => {
     setHasJoined(true)
     setName(joiningPlayerName)
     socket.emit(WebSocketEvents.PLAYER_JOIN,{name: joiningPlayerName})
+    toast.success(`Welcome ${joiningPlayerName}`)
+
   }
   return (
     <Card className="flex flex-col w-full h-full bg-dark-blue border border-[#5a6374] rounded-small py-48 px-20">

@@ -116,44 +116,62 @@ export const CurrentRound = () => {
         </li>
         <li className="w-full">
           <ul className="w-full flex flex-col items-center mx-w-[250px] overflow-scroll">
-            {sortedPlayers.map((player: IPlayer, index: number) => (
-              <li
-                key={index}
-                className={`w-full flex items-center justify-between gap-24 px-24 py-8 bg-${
-                  index % 2 === 0 ? "dark-blue" : "#232833"
-                }`}
-              >
-                <p
-                  className={`flex-1 ${
-                    !isComputing && player.multiplier < freezePoint
-                      ? "text-[#15803d]"
-                      : !isComputing && player.multiplier > freezePoint
-                      ? "text-[#f14e5f]"
-                      : "text-white"
-                  }`}
-                >
-                  {player.name === name ? "You" : player.name}
-                </p>
-                <p  className={`flex-1 ${
-                    !isComputing && player.multiplier < freezePoint
-                      ? "text-[#15803d]"
-                      : !isComputing && player.multiplier > freezePoint
-                      ? "text-[#f14e5f]"
-                      : "text-white"
-                  }`}>
-                  {player.points ?? "-"}
-                </p>
-                <p  className={`flex-1 ${
-                    !isComputing && player.multiplier < freezePoint
-                      ? "text-[#15803d]"
-                      : !isComputing && player.multiplier > freezePoint
-                      ? "text-[#f14e5f]"
-                      : "text-white"
-                  }`}>
-                  {player.multiplier ?? "-"}
-                </p>
-              </li>
-            ))}
+            {!!sortedPlayers.length
+              ? sortedPlayers.map((player: IPlayer, index: number) => (
+                  <li
+                    key={index}
+                    className={`w-full flex items-center justify-between gap-24 px-24 py-8 bg-${
+                      index % 2 === 0 ? "dark-blue" : "#232833"
+                    }`}
+                  >
+                    <p
+                      className={`flex-1 ${
+                        !isComputing && player.multiplier < freezePoint
+                          ? "text-[#15803d]"
+                          : !isComputing && player.multiplier > freezePoint
+                          ? "text-[#f14e5f]"
+                          : "text-white"
+                      }`}
+                    >
+                      {player.name === name ? "You" : player.name}
+                    </p>
+                    <p
+                      className={`flex-1 ${
+                        !isComputing && player.multiplier < freezePoint
+                          ? "text-[#15803d]"
+                          : !isComputing && player.multiplier > freezePoint
+                          ? "text-[#f14e5f]"
+                          : "text-white"
+                      }`}
+                    >
+                      {player.points ?? "-"}
+                    </p>
+                    <p
+                      className={`flex-1 ${
+                        !isComputing && player.multiplier < freezePoint
+                          ? "text-[#15803d]"
+                          : !isComputing && player.multiplier > freezePoint
+                          ? "text-[#f14e5f]"
+                          : "text-white"
+                      }`}
+                    >
+                      {player.multiplier ?? "-"}
+                    </p>
+                  </li>
+                ))
+              :  [...Array(4)].map((index: number) => (
+                  <li
+                    key={index}
+                    className={`w-full flex items-center justify-between pl-28 py-8 text-12-${
+                      index % 2 === 0 ? "dark-blue" : "#232833"
+                    }`}
+                  >
+                    <p className="text-white text-center">- </p>
+                    <p className="text-white text-center">- </p>
+                    <p className="text-white text-center">- </p>
+   
+                  </li>
+                ))}
           </ul>
         </li>
       </ul>
@@ -169,7 +187,7 @@ export const CurrentRound = () => {
       </div>
 
       <div className="w-full flex items-center py-24 bg-dark-blue border border-[#5a6374] rounded-small">
-        <div className="w-full h-[48px] flex items-center px-24">
+        <div className="w-full h-[48px] flex items-center px-[10px]">
           <Slider
             aria-label="Temperature"
             defaultValue={0}
@@ -196,8 +214,8 @@ export const CurrentRound = () => {
               "MuiSlider-valueLabelLabel": {
                 color: "white !important",
               },
-              "& .MuiSlider-track":{
-                backgroundColor: '#e53d79'
+              "& .MuiSlider-track": {
+                backgroundColor: "#e53d79",
               },
               // Style the marks label with different colors
               "& .MuiSlider-markLabel": {

@@ -9,6 +9,7 @@ import { useGameContext } from "@/context/gameContext/gameContext";
 import { IPlayer } from "@/app/dto/playerRound.dto";
 import { computerScoreForPlayer } from "../../../utils/computerPlayerScore";
 import { RankPlayer } from "@/interfaces/player.interface";
+import { toast } from "sonner";
 
 interface ChatData {
   id?: string;
@@ -74,6 +75,8 @@ export const Chat: React.FC = () => {
       console.log("IPlayer", data);
       setIsComputing(true);
       socket.emit(WebSocketEvents.ROUND_STARTED, data);
+      toast.success(`${initiatorPlayer.name} initialized the game`)
+
     });
     socket.on(WebSocketEvents.ROUND_STARTED, (initiatingClientName: string) => {
       console.log(

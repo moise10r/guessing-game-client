@@ -4,39 +4,14 @@ import { RankPlayer } from "@/interfaces/player.interface";
 import Image from "next/image";
 
 export const Ranking: React.FC = () => {
-  const rowsData = [
-    {
-      key: "1",
-      name: "Tony Reichert",
-      score: 2,
-    },
-    {
-      key: "2",
-      name: "Zoey Lang",
-      score: 332,
-    },
-    {
-      key: "3",
-      name: "Jane Fisher",
-      score: 323,
-    },
-    {
-      key: "4",
-      name: "William Howard",
-      score: 443,
-    },
-    {
-      key: "5",
-      name: "Kathryn Murphy",
-      score: 543,
-    }
-  ];
 
-  let tableIndx = 0
+  let tableIndx = 1
 
   const {
    playersRanking
   } = useGameContext();
+
+  const sortedRowsData = [...playersRanking].sort((a, b) => a.score - b.score);
 
   return (
        <article className="w-6/12 md:min-w-[480px] grow">
@@ -58,7 +33,7 @@ export const Ranking: React.FC = () => {
         </li>
         <li className="w-full">
           <ul className="w-full flex flex-col items-center  [&>li:nth-child(even)]:bg-dark-blue">
-            {playersRanking.map((player: RankPlayer, index:number) => (
+            {sortedRowsData.map((player: RankPlayer, index:number) => (
               <li key={index} className="w-full flex items-center justify-between gap-24 px-24 py-8 bg-[#232833]">
                 <p className="flex-1 text-white text-sm">{tableIndx++}</p>
                 <p className="flex-1 text-white text-sm">{player.name}</p>

@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Guessing game client
+
+> This is a guessing game based on random numbers and progresses through a series of rounds. The objective is to observe the rising Multiplier value, predict when it will freeze, and place points based on the prediction.
+
+<img width="1728" alt="image" src="https://github.com/moise10r/budget-app/assets/57562869/c9ae8e36-7eae-4268-9978-d4d9c6dd34d3">
+
+## Built With
+
+- Next
+- Tailwind
+- NextUI
+- Websocket
+- Recharts
 
 ## Getting Started
 
-First, run the development server:
+To get a local copy up and running follow these simple example steps.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Prerequisites
+
+- [Nest](https://docs.nestjs.com/microservices/basics)
+- [MongoDB](https://www.mongodb.com/)
+- [RabbitMQ](https://rabbitmq.com/)
+- [Websocket](https://socket.io/)
+
+### Setup
+
+- Make sure you have Docker and docker compose set up properly on your computer
+- Clone or download this repo on your machine
+
+```sh
+git clone git@github.com:moise10r/guessing-game-client.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Enter project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+cd guessing-game-client
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Install Dependencies
 
-## Learn More
+```sh
+pnpm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+```sh
+npm install
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+yarn install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Run
 
-## Deploy on Vercel
+```sh
+pnpm run dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```sh
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```sh
+yarn run dev
+```
+
+NOW YOU'RE GOOD TO TEST THIS API
+
+## Author
+
+👤 **NGANULO RUSHANIKA Moise**
+
+- GitHub: [@githubhandle](https://github.com/moise10r)
+- Twitter: [@twitterhandle](https://twitter.com/MRushanika)
+- LinkedIn: [LinkedIn](https://www.linkedin.com/in/nganulo-rushanika-mo%C3%AFse-626139197/)
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+Feel free to check the [issues page](../../issues/).
+
+## Show your support
+
+Give a ⭐️ if you like this project!
+
+## Acknowledgments
+
+- Splash software
+
+## License
+
+[MIT](./LICENSE)

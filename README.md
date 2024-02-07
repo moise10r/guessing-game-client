@@ -18,14 +18,15 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-- [Nest](https://docs.nestjs.com/microservices/basics)
-- [MongoDB](https://www.mongodb.com/)
-- [RabbitMQ](https://rabbitmq.com/)
+- [Next]([https://docs.nestjs.com/microservices/basics)](https://nextjs.org/)
+- [Tailwind]([https://www.mongodb.com/](https://tailwindui.com/))
+- [NextUI]([https://rabbitmq.com/](https://nextui.org/))
 - [Websocket](https://socket.io/)
+- [Recharts]([https://socket.io/](https://recharts.org/en-US/))
 
 ### Setup
 
-- Make sure you have Docker and docker compose set up properly on your computer
+- Make sure you have Node and npm set up properly on your computer
 - Clone or download this repo on your machine
 
 ```sh

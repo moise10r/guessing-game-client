@@ -17,12 +17,11 @@
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
-
-- [Next]([https://docs.nestjs.com/microservices/basics)](https://nextjs.org/)
-- [Tailwind]([https://www.mongodb.com/](https://tailwindui.com/))
-- [NextUI]([https://rabbitmq.com/](https://nextui.org/))
-- [Websocket](https://socket.io/)
-- [Recharts]([https://socket.io/](https://recharts.org/en-US/))
+- [Next.js](https://nextjs.org)
+- [Tailwind](https://tailwindcss.com)
+- [NextUI](https://nextui.org)
+- [Socket.IO](https://socket.io)
+- [Recharts](https://recharts.org/en-US/)
 
 ### Setup
 

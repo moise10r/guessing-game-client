@@ -11,7 +11,7 @@ export const Ranking: React.FC = () => {
     playersRanking
   } = useGameContext();
 
-  const sortedRowsData = [...playersRanking].sort((a, b) => a.score - b.score);
+  const sortedRowsData = [...playersRanking].sort((a, b) => b.score - a.score);
 
   return (
     <article className="w-6/12 md:min-w-[480px] grow">

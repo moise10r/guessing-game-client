@@ -33,11 +33,18 @@ export const Ranking: React.FC = () => {
         </li>
         <li className="w-full">
           <ul className="w-full flex flex-col items-center  [&>li:nth-child(even)]:bg-dark-blue">
-            {sortedRowsData.map((player: RankPlayer, index:number) => (
+            {!!sortedRowsData.length?sortedRowsData.map((player: RankPlayer, index:number) => (
               <li key={index} className="w-full flex items-center justify-between gap-24 px-24 py-8 bg-[#232833]">
                 <p className="flex-1 text-white text-sm">{tableIndx++}</p>
                 <p className="flex-1 text-white text-sm">{player.name}</p>
                 <p className="flex-1 text-white text-sm">{player.score}</p>
+              </li>
+            )): [...Array(5)].map((i: number,index:number) => (
+              <li key={index} className="w-full flex items-center justify-between gap-24 px-24 py-8 bg-[#232833]">
+                <p className="text-white flex-1">- </p>
+                <p className="text-white flex-1">- </p>
+                <p className="text-white flex-1">- </p>
+
               </li>
             ))}
           </ul>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import dynamic from 'next/dynamic'
 import Image from "next/image";
 import { useGameContext } from "@/context/gameContext/gameContext";
 import { RoundController } from "@/components/round-controller/RoundController";
@@ -8,22 +8,13 @@ import { CurrentRound } from "@/components/current-round/CurrentRound";
 import { Login } from "@/components/login/Login";
 import { Ranking } from "@/components/ranking/Ranking";
 import { Chat } from "@/components/chat/Chat";
-import GraphBoard from "@/components/Graph-board/graphBoard";
+import { useEffect, useState } from "react";
 
-const columns = [
-  {
-    key: "No.",
-    label: "No",
-  },
-  {
-    key: "Name",
-    label: "NAME",
-  },
-  {
-    key: "Score",
-    label: "SCORE",
-  },
-];
+
+const GraphBoard = dynamic(
+  () => import('@/components/Graph-board/graphBoard'),
+  { ssr: false }
+)
 
 export default function Home() {
   const {
@@ -35,11 +26,11 @@ export default function Home() {
     points,
     setPoints,
   } = useGameContext();
-
+const [currentTime,setCurrentTime] = useState<string>('');
   const headerItems = [
     {
       icon: "/images/medal.webp",
-      text: score,
+      text: name && score,
       size: "md",
     },
     {
@@ -49,10 +40,16 @@ export default function Home() {
     },
     {
       icon: "/images/clock.webp",
-      text: new Date().toLocaleTimeString(),
+      text: currentTime,
       size: "sm",
     },
   ];
+
+  useEffect(()=>{
+    setCurrentTime(new Date().toLocaleTimeString())
+    headerItems[2].text = currentTime
+  })
+
 
   const handleDecrementPoints = () => {
     if (points > 25) setPoints(points - 25);

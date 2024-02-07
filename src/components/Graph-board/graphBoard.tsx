@@ -11,7 +11,6 @@ import CountUp from "react-countup";
 import { useGameContext } from "@/context/gameContext/gameContext";
 import { socket } from "@/services/socket.service";
 import { WebSocketEvents } from "@/enums/socketevent.enum";
-import CustomAxis from "../customXaxis/customAxis";
 import { toast } from "sonner";
 
 

@@ -87,6 +87,7 @@ export const CurrentRound = () => {
         color="secondary"
         radius="sm"
         fullWidth
+        isDisabled={isComputing}
         text={isComputing ? "Started" : "Start"}
         handleClick={gameStarted}
         className={`h-[48px] text-white bg-gradient-to-r
@@ -166,9 +167,9 @@ export const CurrentRound = () => {
                       index % 2 === 0 ? "dark-blue" : "#232833"
                     }`}
                   >
-                    <p className="text-white text-center">- </p>
-                    <p className="text-white text-center">- </p>
-                    <p className="text-white text-center">- </p>
+                    <p className="text-white flex-1">- </p>
+                    <p className="text-white flex-1">- </p>
+                    <p className="text-white flex-1">- </p>
    
                   </li>
                 ))}

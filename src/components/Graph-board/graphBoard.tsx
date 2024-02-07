@@ -4,7 +4,6 @@ import {
   Line,
   XAxis,
   YAxis,
-  ResponsiveContainer
 
 } from "recharts";
 import CountUp from "react-countup";
@@ -15,14 +14,13 @@ import { toast } from "sonner";
 
 
 const GraphBoard = () => {
-  const { freezePoint, speed, isComputing, score, name, multiplier,points, setScore } = useGameContext();
+  const { freezePoint, speed, isComputing } = useGameContext();
   const graphValue = [{ value: 0 }, { value: 0 }, { value: freezePoint }];
   const [isRoundEnded, setIsRoundEnded] = useState<boolean>(false);
-
+  const axisValues = Array.from({ length: 11 }, (_, index) => ({ t: index }));
   function duration() {
-    return 3000 + 1000 * speed;
+    return 3000 + (1000 * speed);
   }
-console.log('freezePoint',freezePoint);
 
   useEffect(() => {
     const observer = new MutationObserver((mutationsList) => {
@@ -31,12 +29,12 @@ console.log('freezePoint',freezePoint);
         if (muliplierWatchedValue) {
           const rasiedMultiplier = muliplierWatchedValue.match(/[\d.]+/); // get the number value expect x
           if (rasiedMultiplier && rasiedMultiplier.length > 0) {
-            const number = +rasiedMultiplier[0];
-            if (number === freezePoint && freezePoint !== 0) {
-                observer.disconnect()
-                socket.emit(WebSocketEvents.ROUND_ENDED)
-                setIsRoundEnded(true)
-                toast.success('Game session ended')
+            const watchedRaisedMultiplier = +rasiedMultiplier[0];
+            if (watchedRaisedMultiplier === freezePoint && freezePoint !== 0) {
+              observer.disconnect()
+              socket.emit(WebSocketEvents.ROUND_ENDED)
+              setIsRoundEnded(true)
+              toast.success('Game session ended')
             }
           }
         }
@@ -57,12 +55,11 @@ console.log('freezePoint',freezePoint);
     };
   }, [freezePoint, isComputing]);
 
-  const customTicks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <div className="graph-container relative flex justify-center items-center p-2 h-[300px] w-[700px]">
-        <div className={`${isRoundEnded?'text-[#f14e5f]':'text-white'} text-[64px] absolute z-50 top-[20px] right-[25%] font-extrabold`} id="counter">
+        <div className={`${isRoundEnded ? 'text-[#f14e5f]' : 'text-white'} text-[64px] absolute z-50 top-[20px] right-[25%] font-extrabold`} id="counter">
           <CountUp
             start={0}
             end={freezePoint}
@@ -75,12 +72,13 @@ console.log('freezePoint',freezePoint);
             suffix="x"
           ></CountUp>
         </div>
-         <div className="w-[98%] mx-auto">
-             <LineChart
+        <div className="w-full h-full relative">
+          <div className="w-[98%] mx-auto absolute top-0 right-0 bottom-0 left-0">
+            <LineChart
               width={700}
               height={300}
               key={Math.random()}
-                     >
+            >
               <Line
                 type="monotone"
                 dataKey="value"
@@ -92,11 +90,31 @@ console.log('freezePoint',freezePoint);
                 hide={freezePoint === 0}
               />
               <YAxis domain={[0, 10]} hide={true} />
-              <XAxis dataKey={'value'}  domain={[1, 10]} label={{ value: '', position: 'insideBottom', offset: -10,  }}
-              axisLine={{ stroke: '#5a6373', strokeWidth: 1 }} tickLine={false} ticks={customTicks}
-              tick={{ stroke: '#5a6373', strokeWidth: 0.5 }} style={{paddingTop:'10px'}} />
-                     </LineChart>
-         </div>
+              <XAxis dataKey={'value'} tickFormatter={(str) => ''} tickLine={false} />
+            </LineChart>
+          </div>
+          <div className="w-[98%] mx-auto absolute top-0 right-0 bottom-0 left-0 ">
+            <LineChart
+              width={700}
+              height={300}
+              key={Math.random()}
+            >
+              <Line
+                type="monotone"
+                dataKey="t"
+                strokeWidth={6}
+                stroke="#fb544e"
+                data={axisValues}
+                dot={false}
+                animationDuration={0}
+                hide={true}
+              />
+              <XAxis dataKey={'t'} label={{ value: '', position: 'insideBottom', offset: -10, }}
+                axisLine={{ stroke: '#5a6373', strokeWidth: 1 }} tickLine={false}
+                tick={{ stroke: '#5a6373', strokeWidth: 0.5 }} style={{ paddingTop: '10px' }} className="z-50" />
+            </LineChart>
+          </div>
+        </div>
       </div>
     </div>
   );

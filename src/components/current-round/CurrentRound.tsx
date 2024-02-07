@@ -91,11 +91,10 @@ export const CurrentRound = () => {
         text={isComputing ? "Started" : "Start"}
         handleClick={gameStarted}
         className={`h-[48px] text-white bg-gradient-to-r
-        ${
-          isComputing
+        ${isComputing
             ? "from-[#5a6374] to-[#5a6374] cursor-not-allowed"
             : "from-[#e53d79] to-[#f75753]"
-        }
+          }
          `}
       />
 
@@ -119,60 +118,55 @@ export const CurrentRound = () => {
           <ul className="w-full flex flex-col items-center mx-w-[250px] overflow-scroll">
             {!!sortedPlayers.length
               ? sortedPlayers.map((player: IPlayer, index: number) => (
-                  <li
-                    key={index}
-                    className={`w-full flex items-center justify-between gap-24 px-24 py-8 bg-${
-                      index % 2 === 0 ? "dark-blue" : "#232833"
+                <li
+                  key={index}
+                  className={`w-full flex items-center justify-between gap-24 px-24 py-8 bg-${index % 2 === 0 ? "dark-blue" : "#232833"
                     }`}
+                >
+                  <p
+                    className={`flex-1 ${!isComputing && player.multiplier < freezePoint
+                      ? "text-[#15803d]"
+                      : !isComputing && player.multiplier > freezePoint
+                        ? "text-[#f14e5f]"
+                        : "text-white"
+                      }`}
                   >
-                    <p
-                      className={`flex-1 ${
-                        !isComputing && player.multiplier < freezePoint
-                          ? "text-[#15803d]"
-                          : !isComputing && player.multiplier > freezePoint
-                          ? "text-[#f14e5f]"
-                          : "text-white"
+                    {player.name === name ? "You" : player.name}
+                  </p>
+                  <p
+                    className={`flex-1 ${!isComputing && player.multiplier < freezePoint
+                      ? "text-[#15803d]"
+                      : !isComputing && player.multiplier > freezePoint
+                        ? "text-[#f14e5f]"
+                        : "text-white"
                       }`}
-                    >
-                      {player.name === name ? "You" : player.name}
-                    </p>
-                    <p
-                      className={`flex-1 ${
-                        !isComputing && player.multiplier < freezePoint
-                          ? "text-[#15803d]"
-                          : !isComputing && player.multiplier > freezePoint
-                          ? "text-[#f14e5f]"
-                          : "text-white"
+                  >
+                    {player.points ?? "-"}
+                  </p>
+                  <p
+                    className={`flex-1 ${!isComputing && player.multiplier < freezePoint
+                      ? "text-[#15803d]"
+                      : !isComputing && player.multiplier > freezePoint
+                        ? "text-[#f14e5f]"
+                        : "text-white"
                       }`}
-                    >
-                      {player.points ?? "-"}
-                    </p>
-                    <p
-                      className={`flex-1 ${
-                        !isComputing && player.multiplier < freezePoint
-                          ? "text-[#15803d]"
-                          : !isComputing && player.multiplier > freezePoint
-                          ? "text-[#f14e5f]"
-                          : "text-white"
-                      }`}
-                    >
-                      {player.multiplier ?? "-"}
-                    </p>
-                  </li>
-                ))
-              :  [...Array(4)].map((index: number) => (
-                  <li
-                    key={index}
-                    className={`w-full flex items-center justify-between pl-28 py-8 text-12-${
-                      index % 2 === 0 ? "dark-blue" : "#232833"
+                  >
+                    {player.multiplier ?? "-"}
+                  </p>
+                </li>
+              ))
+              : [...Array(4)].map((index: number) => (
+                <li
+                  key={index}
+                  className={`w-full flex items-center justify-between pl-28 py-8 text-12-${index % 2 === 0 ? "dark-blue" : "#232833"
                     }`}
-                  >
-                    <p className="text-white flex-1">- </p>
-                    <p className="text-white flex-1">- </p>
-                    <p className="text-white flex-1">- </p>
-   
-                  </li>
-                ))}
+                >
+                  <p className="text-white flex-1">- </p>
+                  <p className="text-white flex-1">- </p>
+                  <p className="text-white flex-1">- </p>
+
+                </li>
+              ))}
           </ul>
         </li>
       </ul>
@@ -194,12 +188,9 @@ export const CurrentRound = () => {
             defaultValue={0}
             value={speedStep}
             onChange={(e, value: number): void => handleSpeed(value)}
-            // getAriaValueText={valuetext}
             valueLabelDisplay="off"
             step={25}
             marks={speedMarks}
-            // min={10}
-            // max={110}
             classes={{
               root: "w-full ",
               thumb:
@@ -210,15 +201,12 @@ export const CurrentRound = () => {
               color: "#afb7ca",
               background: "",
               "MuiSlider-valueLabel": {
-                color: "white",
-              },
-              "MuiSlider-valueLabelLabel": {
-                color: "white !important",
+                // color: "white",
               },
               "& .MuiSlider-track": {
                 backgroundColor: "#e53d79",
+                padding: '2px 0'
               },
-              // Style the marks label with different colors
               "& .MuiSlider-markLabel": {
                 color: "white",
               },

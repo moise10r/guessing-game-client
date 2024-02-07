@@ -57,9 +57,9 @@ const GraphBoard = () => {
 
 
   return (
-    <div className="w-full ">
+    <div className="w-full flex items-center justify-center">
       <div className="graph-container relative flex justify-center items-center p-2 h-[300px] w-[700px]">
-        <div className={`${isRoundEnded ? 'text-[#f14e5f]' : 'text-white'} text-[64px] absolute z-50 top-[20px] right-[25%] font-extrabold`} id="counter">
+        <div className={`${isRoundEnded ? 'text-[#f14e5f]' : 'text-white'} drop-shadow-md text-[64px] absolute z-50 top-[-50px] right-[25%] font-extrabold  left-1/2 transform -translate-x-1/2`} id="counter">
           <CountUp
             start={0}
             end={freezePoint}

@@ -115,7 +115,7 @@ export const CurrentRound = () => {
           <p className="flex-1 text-sm">Multiplier</p>
         </li>
         <li className="w-full">
-          <ul className="w-full flex flex-col items-center mx-w-[250px] overflow-scroll">
+          <ul className="w-full flex flex-col items-center mx-h-[250px] max-h-[250px] overflow-scroll">
             {!!sortedPlayers.length
               ? sortedPlayers.map((player: IPlayer, index: number) => (
                 <li

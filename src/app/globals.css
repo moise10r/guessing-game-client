@@ -36,6 +36,10 @@ input {
   outline: none;
 }
 
+button {
+  outline: none;
+}
+
 .graph-container .recharts-surface {
   max-width: 100%;
 }

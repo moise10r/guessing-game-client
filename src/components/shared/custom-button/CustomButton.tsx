@@ -36,7 +36,7 @@ export const CustomButton: React.FC<CustomButtonProps> = (props) => {
       type={type || "button"}
       startContent={props.startIcon}
       endContent={props.endIcon}
-      className={`min-w-[30px] ${className}`}
+      className={`${className}`}
       fullWidth={fullWidth}
       onClick={handleClick}
       {...(href && { as: Link, href })}

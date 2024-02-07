@@ -24,7 +24,7 @@ export const RoundController: React.FC<Props> = ({
         {label}
       </p>
 
-      <div className='flex items-center justify-center gap-4 h-[32px]'>
+      <div className='flex items-center justify-center  h-[32px]'>
         <CustomButton
           variant="bordered"
           radius="sm"
@@ -33,7 +33,7 @@ export const RoundController: React.FC<Props> = ({
           handleClick={onDecrement}
           className="max-w-[20px] h-full p-0 border-[#1a1d26] text-white"
         />
-        <div className='h-full text-white text-16 text-center'>
+        <div className='flex-1 text-white text-16 text-center mx-[10px]'>
           <p className="text-while h-full w-[80px] leading-[32px] bg-[#000] rounded-8">
             {parseFloat(value.toPrecision(3))}
           </p>
@@ -44,7 +44,7 @@ export const RoundController: React.FC<Props> = ({
           text=""
           endIcon={<BiSolidUpArrow />}
           handleClick={onIncrement}
-          className="w-[20px] h-full p-0 border-[#1a1d26] text-white"
+          className="max-w-[20px] h-full p-0 border-[#1a1d26] text-white"
         />
       </div>
     </div>

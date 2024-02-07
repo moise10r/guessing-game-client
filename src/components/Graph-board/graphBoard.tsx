@@ -4,6 +4,7 @@ import {
   Line,
   XAxis,
   YAxis,
+  DotProps,
 
 } from "recharts";
 import CountUp from "react-countup";
@@ -13,9 +14,15 @@ import { WebSocketEvents } from "@/enums/socketevent.enum";
 import { toast } from "sonner";
 
 
+const CustomDot: React.FC<DotProps> = ({ cx, cy }) => (
+  <svg>
+    <circle cx={cx} cy={cy} r={5} fill="#fb544e" />
+  </svg>
+);
+
 const GraphBoard = () => {
-  const { freezePoint, speed, isComputing } = useGameContext();
-  const graphValue = [{ value: 0 }, { value: 0 }, { value: freezePoint }];
+  const { freezePoint, speed, isComputing, setFreezePoint } = useGameContext();
+  const lineGraphData = [{ t: 0 }, { t: 0 }, { t: freezePoint }];
   const [isRoundEnded, setIsRoundEnded] = useState<boolean>(false);
   const axisValues = Array.from({ length: 11 }, (_, index) => ({ t: index }));
   function duration() {
@@ -54,6 +61,7 @@ const GraphBoard = () => {
       observer.disconnect();
     };
   }, [freezePoint, isComputing]);
+  console.log('render');
 
 
   return (
@@ -81,16 +89,16 @@ const GraphBoard = () => {
             >
               <Line
                 type="monotone"
-                dataKey="value"
+                dataKey="t"
                 strokeWidth={6}
                 stroke="#fb544e"
-                data={graphValue}
+                data={lineGraphData}
                 dot={false}
                 animationDuration={duration()}
                 hide={freezePoint === 0}
               />
               <YAxis domain={[0, 10]} hide={true} />
-              <XAxis dataKey={'value'} tickFormatter={(str) => ''} tickLine={false} />
+              <XAxis dataKey={'t'} tickFormatter={(str) => ''} tickLine={false} />
             </LineChart>
           </div>
           <div className="w-[98%] mx-auto absolute top-0 right-0 bottom-0 left-0 ">
@@ -105,7 +113,7 @@ const GraphBoard = () => {
                 strokeWidth={6}
                 stroke="#fb544e"
                 data={axisValues}
-                dot={false}
+                dot={<CustomDot />}
                 animationDuration={0}
                 hide={true}
               />
